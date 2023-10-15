@@ -1,6 +1,5 @@
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from django.shortcuts import get_object_or_404
@@ -9,9 +8,8 @@ from django.contrib.auth import get_user_model
 from recipes.models import Recipe
 from recipes.permissions import AllowUnauthenticatedPost, IsAuthorOrReadOnlyPermission
 from .models import Subscribe
-from .serializers import UserSerializer, SubscribeSerializer
 from .pagination import CustomPagination
-from users.serializers import RecipeShortSerializer, CustomUsersSerializer
+from users.serializers import RecipeShortSerializer, CustomUsersSerializer, SubscribeSerializer
 
 User = get_user_model()
 

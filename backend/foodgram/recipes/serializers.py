@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404
 from tags.models import Tag
 from tags.serializers import TagSerializer
 from ingredients.models import Ingredient
-from users.serializers import UsersSerializer
+from users.serializers import CustomUsersSerializer
 
 User = get_user_model()
 
@@ -39,7 +39,7 @@ class CreateUpdateRecipeIngredientsSerializer(serializers.ModelSerializer):
 
 
 class RecipeSerializer(serializers.ModelSerializer):
-    author = UsersSerializer(read_only=True)
+    author = CustomUsersSerializer(read_only=True)
     tags = TagSerializer(many=True)
     ingredients = serializers.SerializerMethodField(
         method_name='get_ingredients')
@@ -68,7 +68,7 @@ class RecipeSerializer(serializers.ModelSerializer):
 
 
 class CreateRecipeSerializer(serializers.ModelSerializer):
-    author = UsersSerializer(read_only=True)
+    author = CustomUsersSerializer(read_only=True)
     tags = serializers.PrimaryKeyRelatedField(
         queryset=Tag.objects.all(),
         many=True
@@ -133,7 +133,7 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
 
 
 class UpdateRecipeSerializer(serializers.ModelSerializer):
-    author = UsersSerializer(read_only=True)
+    author = CustomUsersSerializer(read_only=True)
     tags = serializers.PrimaryKeyRelatedField(
         queryset=Tag.objects.all(),
         many=True

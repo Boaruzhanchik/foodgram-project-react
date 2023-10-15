@@ -144,26 +144,11 @@ REST_FRAMEWORK = {
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-#AUTHENTICATION_BACKENDS = (
-#   "django.contrib.auth.backends.ModelBackend",
-#   "allauth.account.auth_backends.AuthenticationBackend"
-#)
-
-
 DJOSER = {
     'SERIALIZERS': {
-        'user_create': 'users.serializers.UsersCreateSerializer',
-        'user': 'users.serializers.UsersSerializer',
-        'current_user': 'users.serializers.UsersSerializer',
+        'user_create': 'users.serializers.CustomUsersCreateSerializer',
+        'user': 'users.serializers.CustomUsersSerializer',
+        'current_user': 'users.serializers.CustomUsersSerializer',
     },
-    #'PERMISSIONS': {
-    #    'user': ['rest_framework.permissions.AllowAny'],
-    #    'user_list': ['rest_framework.permissions.AllowAny']
-    #},
     'LOGIN_FIELD': 'email',
-    'HIDE_USERS': False,
-    'USERNAME_CHANGED_EMAIL_CONFIRMATION': False,
-    'PASSWORD_CHANGED_EMAIL_CONFIRMATION': False,
-    'SEND_CONFIRMATION_EMAIL': False,
-    'SEND_ACTIVATION_EMAIL': False
 }

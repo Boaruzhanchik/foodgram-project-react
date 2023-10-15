@@ -11,15 +11,15 @@ from recipes.permissions import AllowUnauthenticatedPost, IsAuthorOrReadOnlyPerm
 from .models import Subscribe
 from .serializers import UserSerializer, SubscribeSerializer
 from .pagination import CustomPagination
-from users.serializers import RecipeShortSerializer, UsersSerializer
+from users.serializers import RecipeShortSerializer, CustomUsersSerializer
 
 User = get_user_model()
 
 
 class CustomUserViewSet(ModelViewSet):
     queryset = User.objects.all()
-    serializer_class = UsersSerializer
-    permission_classes = [AllowUnauthenticatedPost,]
+    serializer_class = CustomUsersSerializer
+    #permission_classes = [AllowUnauthenticatedPost,]
     pagination_class = CustomPagination
 
     @action(detail=True, methods=['post', 'delete'])
@@ -31,7 +31,7 @@ class CustomUserViewSet(ModelViewSet):
             subscription, created = Subscribe.objects.get_or_create(
                 user=request.user, author=author)
             if created:
-                user_serializer = UsersSerializer(
+                user_serializer = CustomUsersSerializer(
                     request.user, context={'request': request})
                 recipes_serializer = RecipeShortSerializer(
                     Recipe.objects.filter(author=author), many=True)
@@ -49,7 +49,7 @@ class CustomUserViewSet(ModelViewSet):
             subscription = get_object_or_404(
                 Subscribe, user=request.user, author=author)
             subscription.delete()
-            user_serializer = UsersSerializer(
+            user_serializer = CustomUsersSerializer(
                 request.user, context={'request': request})
             response_data = {
                 **user_serializer.data,

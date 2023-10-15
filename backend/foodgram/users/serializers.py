@@ -12,34 +12,13 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-class UsersCreateSerializer(UserCreateSerializer):
-    """Сериализатор для обработки запросов на создание пользователя.
-    Валидирует создание пользователя с юзернеймом 'me'."""
+class CustomUsersCreateSerializer(UserCreateSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'first_name', 'last_name', 'email',
-                  'password')
-
-        extra_kwargs = {"password": {"write_only": True}}
-
-    def create(self, validated_data):
-        user = User(
-            email=validated_data['email'],
-            username=validated_data['username']
-        )
-        user.set_password(validated_data['password'])
-        user.save()
-        return user
-
-    def validate_username(self, value):
-        if value == "me":
-            raise ValidationError(
-                'Невозможно создать пользователя с таким именем!'
-            )
-        return value
+        fields = ('id', 'username', 'first_name', 'last_name', 'email', 'password')
 
 
-class UsersSerializer(UserSerializer):
+class CustomUsersSerializer(UserSerializer):
     is_subscribed = serializers.SerializerMethodField(
         read_only=True
     )
@@ -56,8 +35,7 @@ class UsersSerializer(UserSerializer):
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'email',
                   'is_subscribed')
-#('id', 'username', 'first_name', 'last_name', 'email',
-                #  'is_subscribed')
+
 
 class RecipeShortSerializer(ModelSerializer):
     image = Base64ImageField()

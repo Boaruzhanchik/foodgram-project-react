@@ -19,9 +19,7 @@ class CustomUsersCreateSerializer(UserCreateSerializer):
 
 
 class CustomUsersSerializer(UserSerializer):
-    is_subscribed = serializers.SerializerMethodField(
-        read_only=True
-    )
+    is_subscribed = serializers.SerializerMethodField()
 
     def get_is_subscribed(self, obj):
         user = self.context['request'].user

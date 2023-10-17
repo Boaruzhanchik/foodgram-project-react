@@ -62,6 +62,14 @@ WSGI_APPLICATION = 'foodgram.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+#Постман коллекция
+#DATABASES = {
+#    "default": {
+#        "ENGINE": "django.db.backends.sqlite3",
+#        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+#    }
+#}
+
 #Для локального
 DATABASES = {
     'default': {
@@ -149,6 +157,10 @@ DJOSER = {
         'user_create': 'users.serializers.CustomUsersCreateSerializer',
         'user': 'users.serializers.CustomUsersSerializer',
         'current_user': 'users.serializers.CustomUsersSerializer',
+    },
+    "PERMISSIONS": {
+        "user": ("rest_framework.permissions.IsAuthenticated",),
+        "user_list": ("rest_framework.permissions.AllowAny",),
     },
     'LOGIN_FIELD': 'email',
 }

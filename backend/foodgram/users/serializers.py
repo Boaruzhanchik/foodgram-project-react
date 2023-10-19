@@ -11,6 +11,16 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+class ShowRecipeSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Recipe
+        fields = (
+            "id",
+            "name",
+            "image",
+            "cooking_time",
+        )
+
 
 class CustomUsersCreateSerializer(UserCreateSerializer):
     class Meta:
@@ -48,40 +58,44 @@ class RecipeShortSerializer(ModelSerializer):
         )
 
 
-class SubscribeSerializer(UserSerializer):
-    recipes = serializers.SerializerMethodField(method_name='get_recipes')
-    recipes_count = serializers.SerializerMethodField(
-        method_name='get_recipes_count'
-    )
-    is_subscribed = serializers.SerializerMethodField(
-        read_only=True
-    )
+class SubscriptionShowSerializers(CustomUsersSerializer):
+    recipes = serializers.SerializerMethodField(read_only=True)
+    recipes_count = serializers.SerializerMethodField(read_only=True)
 
-    def get_srs(self):
+    class Meta(CustomUsersSerializer.Meta):
+        fields = CustomUsersSerializer.Meta.fields + (
+            "recipes",
+            "recipes_count",
+        )
 
-        return RecipeShortSerializer
+    def get_recipes_count(self, obj):
+        return obj.recipes.count()
+
+    def get_recipes(self, obj):
+        request = self.context.get("request")
+        limit = request.query_params.get("recipes_limit")
+        recipes = Recipe.objects.filter(author=obj).all()
+        if limit:
+            recipes = recipes[:(int(limit))]
+        srs = ShowRecipeSerializers(recipes, many=True,
+                                    context={"request": request})
+        return srs.data
     
-    def get_is_subscribed(self, obj):
-        user = self.context['request'].user
-
-        if user.is_anonymous:
-            return False
-
-        return Subscribe.objects.filter(user=user, author=obj).exists()
+class SubscribeSerializer(UserSerializer):
+    recipes = serializers.SerializerMethodField()
+    recipes_count = serializers.SerializerMethodField()
+    is_subscribed = serializers.SerializerMethodField(read_only=True)
 
     def get_recipes(self, obj):
         author_recipes = Recipe.objects.filter(author=obj)
 
-        if 'recipes_limit' in self.context.get('request').GET:
-            recipes_limit = self.context.get('request').GET['recipes_limit']
+        if 'recipes_limit' in self.context['request'].GET:
+            recipes_limit = self.context['request'].GET['recipes_limit']
             author_recipes = author_recipes[:int(recipes_limit)]
 
         if author_recipes:
-            serializer = self.get_srs()(
-                author_recipes,
-                context={'request': self.context.get('request')},
-                many=True
-            )
+            serializer = RecipeShortSerializer(
+                author_recipes, context={'request': self.context['request']}, many=True)
             return serializer.data
 
         return []
@@ -90,16 +104,8 @@ class SubscribeSerializer(UserSerializer):
         return Recipe.objects.filter(author=obj).count()
 
     class Meta:
-        model = User
-        fields = (
-            'id',
-            'first_name',
-            'last_name',
-            'email',
-            'is_subscribed',
-            'recipes',
-            'recipes_count'
-        )
+        model = Subscribe
+        fields = "__all__"
 
 
 class AuthorRecipesSerializer(serializers.ModelSerializer):

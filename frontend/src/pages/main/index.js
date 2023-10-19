@@ -42,7 +42,7 @@ const HomePage = ({ updateOrders }) => {
       })
   }, [])
 
-
+  console.log(recipes)
   return <Main>
     <Container>
       <MetaTags>

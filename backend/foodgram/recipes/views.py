@@ -4,25 +4,29 @@ from django.shortcuts import get_object_or_404
 from .permissions import IsAuthorOrReadOnlyPermission
 from users.pagination import CustomPagination
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from django.http import HttpResponse
-from .serializers import CreateRecipeSerializer, UpdateRecipeSerializer, RecipeSerializer
+from .serializers import RecipeCreateUpdateSerializer,  RecipeSerializer
 from users.serializers import RecipeShortSerializer
-
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import generics
+from django.db.models import Q
+from django_filters.rest_framework import DjangoFilterBackend
+from .filters import RecipeFilter
 
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
     permission_classes = [IsAuthorOrReadOnlyPermission]
     pagination_class = CustomPagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = RecipeFilter
 
     def get_serializer_class(self):
-        if self.action == 'create':
-            return CreateRecipeSerializer
-        elif self.action == 'partial_update':
-            return UpdateRecipeSerializer
-        else:
-            return RecipeSerializer
+        if self.action in ('create', 'partial_update'):
+            return RecipeCreateUpdateSerializer
+        return RecipeSerializer
 
     @action(detail=True, methods=('post', 'delete'))
     def favorite(self, request, pk=None):
@@ -58,8 +62,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
             return Response(status=status.HTTP_204_NO_CONTENT)
 
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-#Поменять язык комментариев 
     @action(detail=True, methods=['POST', 'DELETE'])
     def shopping_cart(self, request, pk):
         """Method to add/remove a recipe from the shopping cart."""

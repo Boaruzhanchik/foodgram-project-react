@@ -58,7 +58,7 @@ class CustomUserViewSet(ModelViewSet):
 
     @action(detail=True, methods=['post', 'delete'])
     def subscribe(self, request, pk=None):
-        """Подписаться отписаться от автора."""
+        """Подписаться или отписаться от автора."""
         author = self.get_object()
 
         if request.method == 'POST':
@@ -66,39 +66,45 @@ class CustomUserViewSet(ModelViewSet):
                 user=request.user, author=author)
             if created:
                 user_serializer = CustomUsersSerializer(
-                    request.user, context={'request': request})
+                    author, context={'request': request})
                 recipes_serializer = RecipeShortSerializer(
                     Recipe.objects.filter(author=author), many=True)
+                recipes_count = Recipe.objects.filter(author=author).count()
                 response_data = {
                     **user_serializer.data,
                     'is_subscribed': True,
-                    'recipes': recipes_serializer.data
+                    'recipes': recipes_serializer.data,
+                    'recipes_count': recipes_count
                 }
                 return Response(response_data, status=status.HTTP_201_CREATED)
             else:
-                return Response({"detail": "Already subscribed"},
-                                status=status.HTTP_400_BAD_REQUEST)
+                return Response({"detail": "Already subscribed"}, status=status.HTTP_400_BAD_REQUEST)
 
         if request.method == 'DELETE':
             subscription = get_object_or_404(
                 Subscribe, user=request.user, author=author)
             subscription.delete()
-            user_serializer = CustomUsersSerializer(
-                request.user, context={'request': request})
-            response_data = {
-                **user_serializer.data,
-                'is_subscribed': False,
-                'recipes': []
-            }
-            return Response(response_data, status=status.HTTP_204_NO_CONTENT)
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=False, methods=['get'])
     def subscriptions(self, request):
-        """Список подписок на авторов."""
-        queryset = User.objects.filter(subscriber__user=request.user)
-        serializer = SubscribeSerializer(
-            queryset, many=True, context={'request': request})
-        return Response(serializer.data)
+        user = request.user
+        subscriptions = Subscribe.objects.filter(user=user)
+        authors = [subscription.author for subscription in subscriptions]
+
+        data = []
+        for author in authors:
+            user_serializer = CustomUsersSerializer(author, context={'request': request})
+            recipes_serializer = RecipeShortSerializer(Recipe.objects.filter(author=author), many=True)
+            recipes_count = Recipe.objects.filter(author=author).count()
+            response_data = {
+                **user_serializer.data,
+                'recipes': recipes_serializer.data,
+                'recipes_count': recipes_count
+            }
+            data.append(response_data)
+
+        return Response(data)
 
     @action(detail=True, methods=['get'])
     def user_recipes(self, request, pk=None):

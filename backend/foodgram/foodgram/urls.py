@@ -15,10 +15,11 @@ router_v1.register('recipes', RecipeViewSet)
 router_v1.register('tags', TagViewSet)
 router_v1.register('users', CustomUserViewSet, basename='users')
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router_v1.urls)),
-    path('api/auth/', include('djoser.urls.authtoken'))
+    path('api/auth/', include('djoser.urls.authtoken')),
 ]
 
 if settings.DEBUG:

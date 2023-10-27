@@ -20,7 +20,8 @@ class Recipe(models.Model):
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        verbose_name='Автор')
+        verbose_name='Автор',
+        related_name='recipes')
     name = models.CharField(
         max_length=255,
         verbose_name='Название')
@@ -81,7 +82,7 @@ class Favorite(models.Model):
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='favorites',
+        related_name='favorited_by',
         verbose_name='Рецепт',
     )
 

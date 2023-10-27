@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from drf_extra_fields.fields import Base64ImageField
 from django.core.validators import MinValueValidator
 
-from .models import Recipe, RecipeIngredients, ShoppingCart, Favorite
+from .models import Recipe, RecipeIngredients, ShoppingCart
 from tags.models import Tag
 from tags.serializers import TagSerializer
 from ingredients.models import Ingredient
@@ -14,11 +14,11 @@ User = get_user_model()
 
 class RecipeIngredientsSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(
-        read_only=True, source="ingredient.id",)
+        read_only=True, source='ingredient.id',)
     name = serializers.CharField(
-        read_only=True, source="ingredient.name",)
+        read_only=True, source='ingredient.name',)
     measurement_unit = serializers.CharField(
-        read_only=True, source="ingredient.measurement_unit",)
+        read_only=True, source='ingredient.measurement_unit',)
 
     class Meta:
         model = RecipeIngredients
@@ -45,7 +45,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     ingredients = RecipeIngredientsSerializer(
         many=True,
         read_only=False,
-        source="recipeingredients_set",)
+        source='recipeingredients_set',)
     is_favorited = serializers.SerializerMethodField(
         method_name='get_is_favorited')
     is_in_shopping_cart = serializers.SerializerMethodField(
@@ -55,7 +55,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         user = self.context.get('request').user
         if user.is_anonymous:
             return False
-        return obj.favorites.filter(user=user).exists()
+        return obj.favorited_by.filter(user=user).exists()
 
     def get_is_in_shopping_cart(self, obj):
         user = self.context['request'].user
@@ -151,10 +151,4 @@ class ShoppingCartSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ShoppingCart
-        fields = ('user', 'recipe')
-
-
-class FavoriteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Favorite
         fields = ('user', 'recipe')

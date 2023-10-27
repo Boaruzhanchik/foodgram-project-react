@@ -4,6 +4,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+CHOICES_LIST = (
+    ('0', 'False'),
+    ('1', 'True')
+)
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY')

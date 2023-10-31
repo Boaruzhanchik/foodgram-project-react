@@ -1,12 +1,12 @@
-from tags.models import Tag
-from django_filters import (FilterSet,
-                            ModelMultipleChoiceFilter,
-                            ModelChoiceFilter)
-from .models import Recipe, Favorite, ShoppingCart
-from users.models import User
-from django_filters import rest_framework
-from foodgram.settings import CHOICES_LIST
 from distutils.util import strtobool
+
+from django_filters import (FilterSet, ModelChoiceFilter,
+                            ModelMultipleChoiceFilter, rest_framework)
+from foodgram.settings import CHOICES_LIST
+from tags.models import Tag
+from users.models import User
+
+from .models import Favorite, Recipe, ShoppingCart
 
 
 class RecipeFilter(FilterSet):

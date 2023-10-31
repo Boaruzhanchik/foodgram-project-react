@@ -1,0 +1,3 @@
+admin:
+login: iosif
+password: 123

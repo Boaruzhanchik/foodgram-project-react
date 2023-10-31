@@ -1,17 +1,17 @@
+from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
+from recipes.models import Recipe
 from rest_framework import status
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from django.shortcuts import get_object_or_404
-from django.contrib.auth import get_user_model
-from rest_framework.permissions import IsAuthenticated
-from recipes.models import Recipe
+from users.serializers import (CustomUsersCreateSerializer,
+                               CustomUsersSerializer, RecipeShortSerializer,
+                               SubscriptionShowSerializers)
+
 from .models import Subscribe
 from .pagination import CustomPagination
-from users.serializers import (RecipeShortSerializer,
-                               CustomUsersSerializer,
-                               CustomUsersCreateSerializer,
-                               SubscriptionShowSerializers)
 
 User = get_user_model()
 

@@ -1,10 +1,11 @@
-from djoser.serializers import UserCreateSerializer, UserSerializer
-from rest_framework import serializers
-from .models import Subscribe
-from recipes.models import Recipe
-from drf_extra_fields.fields import Base64ImageField
-from rest_framework.serializers import ModelSerializer
 from django.contrib.auth import get_user_model
+from djoser.serializers import UserCreateSerializer, UserSerializer
+from drf_extra_fields.fields import Base64ImageField
+from recipes.models import Recipe
+from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer
+
+from .models import Subscribe
 
 User = get_user_model()
 

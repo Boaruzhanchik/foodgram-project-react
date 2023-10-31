@@ -1,13 +1,13 @@
-from rest_framework import exceptions, serializers
 from django.contrib.auth import get_user_model
-from drf_extra_fields.fields import Base64ImageField
 from django.core.validators import MinValueValidator
-
-from .models import Recipe, RecipeIngredients, ShoppingCart
+from drf_extra_fields.fields import Base64ImageField
+from ingredients.models import Ingredient
+from rest_framework import exceptions, serializers
 from tags.models import Tag
 from tags.serializers import TagSerializer
-from ingredients.models import Ingredient
 from users.serializers import CustomUsersSerializer
+
+from .models import Recipe, RecipeIngredients, ShoppingCart
 
 User = get_user_model()
 

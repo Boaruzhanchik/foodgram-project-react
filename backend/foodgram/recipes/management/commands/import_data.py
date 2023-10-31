@@ -1,8 +1,10 @@
-import os
 import json
+import os
+
 from django.core.management.base import BaseCommand
 from ingredients.models import Ingredient
 from tags.models import Tag
+
 
 class Command(BaseCommand):
     help = 'Load data from JSON files to DB'
@@ -29,7 +31,7 @@ class Command(BaseCommand):
         for data_object in data:
             name = data_object.get('name', None)
             color = data_object.get('color', None)
-            slug = data_object.get('slug',None)
+            slug = data_object.get('slug', None)
             try:
                 tag, created = (
                     Tag.objects.get_or_create(
@@ -47,6 +49,5 @@ class Command(BaseCommand):
             except Exception as ex:
                 print(str(ex))
                 msg = ("\n\nSomething went wrong saving this tag:"
-                       "{}\n{}".format(name,str(ex)))
+                       "{}\n{}".format(name, str(ex)))
                 print(msg)
-

@@ -1,3 +1,7 @@
+Ссылка на сайт 
+https://boaruzhan-foodgram.sytes.net
+
+https://boaruzhan-foodgram.sytes.net/admin/
 admin:
 login: iosif
 password: 123

@@ -11,7 +11,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost").split(' ')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -58,6 +58,17 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'foodgram.wsgi.application'
+
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql',
+#        'NAME': 'foodgramlocal',
+#        'USER': 'postgres',
+#        'PASSWORD': '19216812',
+#        'HOST': 'localhost',
+#        'PORT': 5432,
+#    }
+#}
 
 DATABASES = {
     'default': {

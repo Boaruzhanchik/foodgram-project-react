@@ -2,6 +2,11 @@
 ```
 https://boaruzhan-foodgram.sytes.net
 ```
+```
+Админка https://boaruzhan-foodgram.sytes.net/admin/
+login iosif
+password 123
+```
 ```Клонируйте репозиторий и перейдите в него в командной строке:```
 ```
 git clone https://github.com/boaruzhanchik/foodgram-project-react.git

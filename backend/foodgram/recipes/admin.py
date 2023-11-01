@@ -36,9 +36,10 @@ class RecipeAdmin(BaseAdminSettings):
     search_fields = ('name',)
     list_filter = ('author', 'name', 'tags')
     filter_horizontal = ('tags',)
+    readonly_fields = ('added_in_favorites',)
 
     def added_in_favorites(self, obj):
-        return obj.favorites.all().count()
+        return obj.favorited_by.count()
     added_in_favorites.short_description = 'Количество добавлений в избранное'
 
 

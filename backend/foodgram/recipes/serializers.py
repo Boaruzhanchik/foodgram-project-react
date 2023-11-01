@@ -1,15 +1,18 @@
-from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
 from drf_extra_fields.fields import Base64ImageField
-from ingredients.models import Ingredient
+
 from rest_framework import exceptions, serializers
+
+from ingredients.models import Ingredient
 from tags.models import Tag
 from tags.serializers import TagSerializer
 from users.serializers import CustomUsersSerializer
-
+from foodgram.settings import (ERROR_MESSAGE_AMOUNT_MIN,
+                               ERROR_MESSAGE_COOKING_TIME_MIN,
+                               ERROR_MESSAGE_TAGS_REQUIRED,
+                               ERROR_MESSAGE_INGREDIENTS_REQUIRED,
+                               ERROR_MESSAGE_DUPLICATE_INGREDIENT)
 from .models import Recipe, RecipeIngredients, ShoppingCart
-
-User = get_user_model()
 
 
 class RecipeIngredientsSerializer(serializers.ModelSerializer):
@@ -32,7 +35,7 @@ class CreateUpdateRecipeIngredientsSerializer(serializers.ModelSerializer):
         validators=(
             MinValueValidator(
                 1,
-                message='Количество ингредиента должно быть 1 или более.'),))
+                message=ERROR_MESSAGE_AMOUNT_MIN),))
 
     class Meta:
         model = Ingredient
@@ -80,24 +83,24 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
         validators=(
             MinValueValidator(
                 1,
-                message='Время приготовления должно быть 1 или более.'),))
+                message=ERROR_MESSAGE_COOKING_TIME_MIN),))
 
     def validate_tags(self, value):
         if not value:
             raise exceptions.ValidationError(
-                'Нужно добавить хотя бы один тег.')
+                ERROR_MESSAGE_TAGS_REQUIRED)
 
         return value
 
     def validate_ingredients(self, value):
         if not value:
             raise exceptions.ValidationError(
-                'Нужно добавить хотя бы один ингредиент.')
+                ERROR_MESSAGE_INGREDIENTS_REQUIRED)
         ingredients = [item['id'] for item in value]
         for ingredient in ingredients:
             if ingredients.count(ingredient) > 1:
                 raise exceptions.ValidationError(
-                    'У рецепта не может быть два одинаковых ингредиента.')
+                    ERROR_MESSAGE_DUPLICATE_INGREDIENT)
         return value
 
     def create(self, validated_data):

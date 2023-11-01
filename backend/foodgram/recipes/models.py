@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
 from django.db import models
+
 from ingredients.models import Ingredient
 from tags.models import Tag
 
@@ -37,6 +38,12 @@ class Recipe(models.Model):
         verbose_name='Теги')
     cooking_time = models.PositiveIntegerField(
         verbose_name='Время приготовления ')
+    pub_date = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Дата публикации')
+
+    class Meta:
+        ordering = ['-pub_date']
 
     def __str__(self):
         return self.name
@@ -120,6 +127,7 @@ class RecipeIngredients(models.Model):
     class Meta:
         verbose_name = 'Ингредиенты для рецепта'
         verbose_name_plural = 'Ингредиенты для рецепта'
+        ordering = ['recipe']
 
     def __str__(self):
         return f'Рецепт {self.recipe} содержит ингредиент {self.ingredient}'

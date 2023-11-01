@@ -1,13 +1,11 @@
-from django.contrib.auth import get_user_model
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from drf_extra_fields.fields import Base64ImageField
-from recipes.models import Recipe
+
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
-from .models import Subscribe
-
-User = get_user_model()
+from recipes.models import Recipe
+from .models import Subscribe, User
 
 
 class CustomUsersCreateSerializer(UserCreateSerializer):
@@ -68,7 +66,7 @@ class SubscriptionShowSerializers(CustomUsersSerializer):
     def get_recipes(self, obj):
         request = self.context.get('request')
         limit = request.query_params.get('recipes_limit')
-        recipes = Recipe.objects.filter(author=obj).all()
+        recipes = obj.recipes.all()
         if limit:
             recipes = recipes[:(int(limit))]
         srs = RecipeShortSerializer(recipes, many=True,
@@ -90,7 +88,7 @@ class SubscribeSerializer(UserSerializer):
     is_subscribed = serializers.SerializerMethodField(read_only=True)
 
     def get_recipes(self, obj):
-        author_recipes = Recipe.objects.filter(author=obj)
+        author_recipes = obj.recipes.all()
 
         if 'recipes_limit' in self.context['request'].GET:
             recipes_limit = self.context['request'].GET['recipes_limit']
@@ -117,7 +115,7 @@ class AuthorRecipesSerializer(serializers.ModelSerializer):
     recipes_count = serializers.SerializerMethodField()
 
     def get_recipes(self, obj):
-        author_recipes = Recipe.objects.filter(author=obj)
+        author_recipes = obj.recipes.all()
 
         if 'recipes_limit' in self.context.get('request').GET:
             recipes_limit = self.context.get('request').GET['recipes_limit']

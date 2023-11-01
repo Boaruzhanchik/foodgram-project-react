@@ -1,19 +1,19 @@
-from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
-from recipes.models import Recipe
+
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+
 from users.serializers import (CustomUsersCreateSerializer,
-                               CustomUsersSerializer, RecipeShortSerializer,
+                               CustomUsersSerializer,
+                               RecipeShortSerializer,
                                SubscriptionShowSerializers)
 
-from .models import Subscribe
+from recipes.models import Recipe
+from .models import Subscribe, User
 from .pagination import CustomPagination
-
-User = get_user_model()
 
 
 class CustomUserViewSet(ModelViewSet):

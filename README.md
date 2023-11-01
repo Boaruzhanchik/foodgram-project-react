@@ -1,5 +1,6 @@
 # Проект «Продуктовый помощник» - Foodgram
-Foodgram - Продуктовый помощник. Сервис позволяет публиковать рецепты, подписываться на публикации других пользователей, добавлять понравившиеся рецепты в список "Избранное", а перед походом в магазин - скачивать сводный список продуктов, необходимых для приготовления одного или нескольких выбранных блюд.
+Foodgram - Grocery Assistant. The service allows you to publish recipes, subscribe to the publications of other users, add your favorite recipes to the "Favorites" list, and before going to the store - download a consolidated list of products needed to prepare one or more selected dishes.
+(Kodirovka na yandexe raboraet kak-to nepravilno, na GITHUBE vse imeet chitabelnyu vid,russkie bukvi lomautsy)
 ```
 https://boaruzhan-foodgram.sytes.net
 ```

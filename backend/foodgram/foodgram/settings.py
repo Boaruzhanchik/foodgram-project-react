@@ -5,11 +5,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-CHOICES_LIST = (
-    ('0', 'False'),
-    ('1', 'True')
-)
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY')
@@ -67,24 +62,13 @@ WSGI_APPLICATION = 'foodgram.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'foodgramlocal',
-        'USER': 'postgres',
-        'PASSWORD': '19216812',
-        'HOST': 'localhost',
-        'PORT': 5432,
+        'NAME': os.getenv('POSTGRES_DB', ''),
+        'USER': os.getenv('POSTGRES_USER', ''),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', ''),
+        'HOST': os.getenv('DB_HOST', ''),
+        'PORT': os.getenv('DB_PORT', 5432)
     }
 }
-
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.postgresql',
-#        'NAME': os.getenv('POSTGRES_DB', ''),
-#        'USER': os.getenv('POSTGRES_USER', ''),
-#        'PASSWORD': os.getenv('POSTGRES_PASSWORD', ''),
-#        'HOST': os.getenv('DB_HOST', ''),
-#        'PORT': os.getenv('DB_PORT', 5432)
-#    }
-#}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -151,3 +135,8 @@ ERROR_MESSAGE_COOKING_TIME_MIN = 'Время приготовления долж
 ERROR_MESSAGE_TAGS_REQUIRED = 'Нужно добавить хотя бы один тег.'
 ERROR_MESSAGE_INGREDIENTS_REQUIRED = 'Нужно добавить хотя бы один ингредиент.'
 ERROR_MESSAGE_DUPLICATE_INGREDIENT = 'У рецепта не может быть два одинаковых ингредиента.'
+
+CHOICES_LIST = (
+    ('0', 'False'),
+    ('1', 'True')
+)

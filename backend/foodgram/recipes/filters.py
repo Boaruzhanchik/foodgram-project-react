@@ -9,10 +9,6 @@ from .models import Favorite, Recipe, ShoppingCart
 
 
 class RecipeFilter(FilterSet):
-    author = ModelChoiceFilter(
-        field_name='author',
-        to_field_name='username',
-        queryset=User.objects.all())
     tags = ModelMultipleChoiceFilter(
         field_name='tags__slug',
         to_field_name='slug',

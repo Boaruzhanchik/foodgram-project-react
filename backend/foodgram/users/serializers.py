@@ -56,20 +56,20 @@ class CustomUsersSerializer(UserSerializer):
                   'is_subscribed')
 
 
-class SubscriptionShowSerializers(CustomUsersSerializer):
-    recipes = serializers.SerializerMethodField(read_only=True)
+class SubscriptionShowSerializers(CustomUsersSerializer): 
+    recipes = serializers.SerializerMethodField(read_only=True) 
     recipes_count = serializers.SerializerMethodField(read_only=True)
 
     def get_recipes_count(self, obj):
         return obj.recipes.count()
 
-    def get_recipes(self, obj):
-        request = self.context.get('request')
+    def get_recipes(self, obj): 
+        request = self.context.get('request') 
         limit = request.query_params.get('recipes_limit')
-        recipes = obj.recipes.all()
-        if limit:
-            recipes = recipes[:(int(limit))]
-        srs = RecipeShortSerializer(recipes, many=True,
+        recipes = Recipe.objects.filter(author=obj).all()
+        if limit: 
+            recipes = recipes[:(int(limit))] 
+        srs = RecipeShortSerializer(recipes, many=True, 
                                     context={'request': request})
         return srs.data
 
@@ -82,17 +82,17 @@ class SubscriptionShowSerializers(CustomUsersSerializer):
 
 class SubscribeSerializer(UserSerializer):
     recipes = serializers.SerializerMethodField()
-    recipes_count = serializers.SerializerMethodField(
+    recipes_count = serializers.SerializerMethodField( 
         method_name='get_recipes_count'
     )
     is_subscribed = serializers.SerializerMethodField(read_only=True)
 
     def get_recipes(self, obj):
-        author_recipes = obj.recipes.all()
+        author_recipes = Recipe.objects.filter(author=obj)
 
         if 'recipes_limit' in self.context['request'].GET:
             recipes_limit = self.context['request'].GET['recipes_limit']
-            author_recipes = author_recipes[:int(recipes_limit)]
+            author_recipes = author_recipes[:int(recipes_limit)] 
 
         if author_recipes:
             serializer = RecipeShortSerializer(
@@ -100,7 +100,7 @@ class SubscribeSerializer(UserSerializer):
                 many=True)
             return serializer.data
 
-        return []
+        return [] 
 
     def get_recipes_count(self, obj):
         return Recipe.objects.filter(author=obj).count()

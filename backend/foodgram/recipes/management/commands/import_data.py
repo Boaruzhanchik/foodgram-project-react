@@ -29,6 +29,7 @@ class Command(BaseCommand):
             {"name": "Завтрак", "color": "#00ff00", "slug": "breakfast"},
             {"name": "Обед", "color": "#ffcc00", "slug": "lunch"},
             {"name": "Ужин ", "color": "#004524", "slug": "dinner"},
+            {"name": "Перекус ", "color": "#8B008B", "slug": "Snack"},
         ]
         for data_object in data:
             name = data_object.get('name', None)
